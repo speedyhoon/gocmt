@@ -10,12 +10,16 @@ import (
 
 // parseFile parses and modifies the input file if necessary. Returns AST represents of (new) source, a boolean
 // to report whether the source file was modified, and any error if occurred.
-func parseFile(fset *token.FileSet, filePath, template string) (af *ast.File, modified bool, err error) {
-	af, err = parser.ParseFile(fset, filePath, nil, parser.ParseComments|parser.AllErrors)
+func parseFile(fSet *token.FileSet, filePath, template string) (af *ast.File, modified bool, err error) {
+	af, err = parser.ParseFile(fSet, filePath, nil, parser.ParseComments|parser.AllErrors)
 	if err != nil {
 		return
 	}
 
+	return ProcessFile(af, template)
+}
+
+func ProcessFile(af *ast.File, template string) (_ *ast.File, modified bool, err error) {
 	// Inject first comment to prevent nil comment map
 	if len(af.Comments) == 0 {
 		af.Comments = []*ast.CommentGroup{{List: []*ast.Comment{{Slash: -1, Text: "// gocmt"}}}}

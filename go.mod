@@ -1,4 +1,4 @@
-module github.com/cuonglm/gocmt
+module github.com/speedyhoon/gocmt
 
 go 1.16
 
